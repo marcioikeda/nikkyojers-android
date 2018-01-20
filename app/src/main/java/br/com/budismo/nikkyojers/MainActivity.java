@@ -1,4 +1,4 @@
-package br.com.budismo.android.nikkyojers;
+package br.com.budismo.nikkyojers;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

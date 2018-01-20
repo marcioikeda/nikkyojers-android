@@ -1,4 +1,4 @@
-package br.com.budismo.android.nikkyojers;
+package br.com.budismo.nikkyojers;
 
 import org.junit.Test;
 

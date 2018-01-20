@@ -1,4 +1,4 @@
-package br.com.budismo.android.nikkyojers;
+package br.com.budismo.nikkyojers;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
