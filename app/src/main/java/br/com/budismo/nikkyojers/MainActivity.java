@@ -1,8 +1,15 @@
 package br.com.budismo.nikkyojers;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +19,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FirebaseUIHelper.SignListener {
+
+    FirebaseUIHelper firebaseUIHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +55,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        firebaseUIHelper = new FirebaseUIHelper(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseUIHelper.addAuthStateListener();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        firebaseUIHelper.removeAuthStateListener();
     }
 
     @Override
@@ -97,5 +126,31 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FirebaseUIHelper.RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onSignIn() {
+        Toast.makeText(this, "User: " + firebaseUIHelper.getUser().getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSignOut() {
+        Toast.makeText(this, "Signed out", Toast.LENGTH_LONG).show();
+        firebaseUIHelper.startFirebaseUIActivity(this);
     }
 }
