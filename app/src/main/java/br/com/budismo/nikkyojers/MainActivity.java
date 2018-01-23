@@ -1,17 +1,10 @@
 package br.com.budismo.nikkyojers;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,17 +12,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
+import br.com.budismo.nikkyojers.util.GlideApp;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FirebaseUIHelper.SignListener {
 
     FirebaseUIHelper firebaseUIHelper;
+    CircleImageView mIvProfile;
+    TextView mTvUsername;
+    TextView mTvEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +55,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mIvProfile = navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+        mTvUsername = navigationView.getHeaderView(0).findViewById(R.id.tv_username);
+        mTvEmail = navigationView.getHeaderView(0).findViewById(R.id.tv_email);
         firebaseUIHelper = new FirebaseUIHelper(this);
     }
 
@@ -109,18 +111,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_news) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_calendar) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_achievements) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_hbs) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
 
+        } else if (id == R.id.nav_logoff) {
+            firebaseUIHelper.signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,7 +149,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSignIn() {
-        Toast.makeText(this, "User: " + firebaseUIHelper.getUser().getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
+        FirebaseUser user = firebaseUIHelper.getUser();
+        if (user != null) {
+            Toast.makeText(this, "User: " + user.getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
+            if (user.getPhotoUrl() != null) {
+                GlideApp.with(this)
+                        .load(user.getPhotoUrl())
+                        .circleCrop()
+                        .into(mIvProfile);
+            }
+            mTvUsername.setText(user.getDisplayName());
+            mTvEmail.setText(user.getEmail());
+        }
     }
 
     @Override

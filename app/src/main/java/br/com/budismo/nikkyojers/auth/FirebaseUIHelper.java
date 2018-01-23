@@ -83,4 +83,8 @@ public class FirebaseUIHelper {
         return mFirebaseAuth.getCurrentUser();
     }
 
+    public void signOut() {
+        mFirebaseAuth.signOut();
+    }
+
 }
