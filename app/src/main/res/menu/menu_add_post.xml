@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.budismo.nikkyojers.ui.AddPostActivity">
+    <item
+        android:id="@+id/action_publish"
+        android:orderInCategory="100"
+        android:title="@string/action_publish"
+        app:showAsAction="always" />
+</menu>

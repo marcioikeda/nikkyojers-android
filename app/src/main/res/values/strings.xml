@@ -13,7 +13,9 @@
     <string name="nav_logoff_title">Logoff</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_publish">Post</string>
 
     <string name="facebook_application_id" translatable="false">1783058972011642</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1783058972011642</string>
+    <string name="title_activity_add_post">Create new post</string>
 </resources>

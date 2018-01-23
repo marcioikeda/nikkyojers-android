@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
+import br.com.budismo.nikkyojers.ui.AddPostActivity;
 import br.com.budismo.nikkyojers.util.GlideApp;
+import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
@@ -41,8 +43,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -152,12 +154,7 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser user = firebaseUIHelper.getUser();
         if (user != null) {
             Toast.makeText(this, "User: " + user.getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
-            if (user.getPhotoUrl() != null) {
-                GlideApp.with(this)
-                        .load(user.getPhotoUrl())
-                        .circleCrop()
-                        .into(mIvProfile);
-            }
+            Util.bindUserPictureIntoView(this, user.getPhotoUrl(), mIvProfile);
             mTvUsername.setText(user.getDisplayName());
             mTvEmail.setText(user.getEmail());
         }
