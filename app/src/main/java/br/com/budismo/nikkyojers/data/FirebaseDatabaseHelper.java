@@ -26,20 +26,20 @@ public class FirebaseDatabaseHelper {
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    private void writeNewPost(String userId, String title, String body) {
+    public void writeNewPost(Post post, DatabaseReference.CompletionListener listener) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").push().getKey();
-        Post post = new Post(userId, title, body);
         Map<String, Object> postValues = post.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put("/user-posts/" + post.uid + "/" + key, postValues);
 
-        mDatabase.updateChildren(childUpdates);
+        mDatabase.updateChildren(childUpdates, listener);
     }
 
+/*
     private void onStarClicked(DatabaseReference postRef, final String uid) {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
@@ -72,6 +72,7 @@ public class FirebaseDatabaseHelper {
             }
         });
     }
+*/
 
 
 }

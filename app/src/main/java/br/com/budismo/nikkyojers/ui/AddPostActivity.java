@@ -1,5 +1,6 @@
 package br.com.budismo.nikkyojers.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,13 +9,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import br.com.budismo.nikkyojers.R;
+import br.com.budismo.nikkyojers.data.FirebaseDatabaseHelper;
+import br.com.budismo.nikkyojers.data.Post;
+import br.com.budismo.nikkyojers.util.Util;
 
 public class AddPostActivity extends AppCompatActivity implements AddPostActivityFragment.AddPostListener{
 
     private boolean mEnablePost = false;
     private String KEY_ENABLE_POST_STATE = "key_enable_post_state";
+    private FirebaseDatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +35,7 @@ public class AddPostActivity extends AppCompatActivity implements AddPostActivit
         if (savedInstanceState != null) {
             mEnablePost = savedInstanceState.getBoolean(KEY_ENABLE_POST_STATE, false);
         }
+        mDatabaseHelper = new FirebaseDatabaseHelper();
     }
 
     @Override
@@ -43,7 +55,25 @@ public class AddPostActivity extends AppCompatActivity implements AddPostActivit
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_publish) {
-            return true;
+            AddPostActivityFragment fragment = (AddPostActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+            Post newPost = fragment.getPost();
+            if (newPost == null) {
+                Util.startFirebaseUIActivity(this);
+            } else {
+                mDatabaseHelper.writeNewPost(newPost, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Toast.makeText(AddPostActivity.this, databaseError.getCode() + ":" + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(AddPostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
+                        }
+                        finish();
+                    }
+                });
+
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -88,6 +88,11 @@ public class AddPostActivityFragment extends Fragment {
     }
 
     public Post getPost() {
-        return null;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            return new Post(user.getUid(), mEditTitle.getText().toString(), mEditDescription.getText().toString());
+        } else {
+            return null;
+        }
     }
 }

@@ -1,15 +1,26 @@
 package br.com.budismo.nikkyojers.ui;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.budismo.nikkyojers.R;
 import br.com.budismo.nikkyojers.data.Post;
+import br.com.budismo.nikkyojers.data.User;
+import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -18,7 +29,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder> {
 
-    List<Post> mPosts;
+    private List<Post> mPosts = new ArrayList<>();
+    private DatabaseReference mDatabase;
 
     public List<Post> getPosts() {
         return mPosts;
@@ -29,18 +41,45 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
         notifyDataSetChanged();
     }
 
+    public void addNewPost(Post post) {
+        mPosts.add(post);
+        notifyItemInserted(mPosts.size() - 1);
+    }
+
+    public void clear() {
+        mPosts = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_post_feed, parent, false);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         return new PostViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
-        Post post = mPosts.get(position);
+    public void onBindViewHolder(final PostViewHolder holder, int position) {
+        Post post = mPosts.get(mPosts.size() - position - 1);
         holder.tvPostTitle.setText(post.title);
         holder.tvPostDescription.setText(post.body);
+        DatabaseReference userRef = mDatabase.child(post.uid);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                holder.tvUserName.setText(user.name);
+                if (!TextUtils.isEmpty(user.photoUrl)) {
+                    Util.bindUserPictureIntoView(holder.ivUserPhoto.getContext(), Uri.parse(user.photoUrl), holder.ivUserPhoto);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

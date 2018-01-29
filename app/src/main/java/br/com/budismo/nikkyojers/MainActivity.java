@@ -16,9 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
 import br.com.budismo.nikkyojers.ui.AddPostActivity;
+import br.com.budismo.nikkyojers.ui.FeedAdapter;
 import br.com.budismo.nikkyojers.ui.FeedFragment;
 import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,10 +32,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FirebaseUIHelper.SignListener {
 
-    FirebaseUIHelper firebaseUIHelper;
-    CircleImageView mIvProfile;
-    TextView mTvUsername;
-    TextView mTvEmail;
+    private FirebaseUIHelper firebaseUIHelper;
+    private CircleImageView mIvProfile;
+    private TextView mTvUsername;
+    private TextView mTvEmail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         firebaseUIHelper.addAuthStateListener();
+
     }
 
     @Override
@@ -145,7 +153,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FirebaseUIHelper.RC_SIGN_IN) {
+        if (requestCode == Util.RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
@@ -171,7 +179,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSignOut() {
         Toast.makeText(this, "Signed out", Toast.LENGTH_LONG).show();
-        firebaseUIHelper.startFirebaseUIActivity(this);
+        Util.startFirebaseUIActivity(this);
     }
 
 }

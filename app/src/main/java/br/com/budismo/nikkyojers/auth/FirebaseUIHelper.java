@@ -1,19 +1,13 @@
 package br.com.budismo.nikkyojers.auth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.User;
-import com.firebase.ui.auth.provider.IdpProvider;
-import com.firebase.ui.auth.provider.Provider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
-import java.util.List;
+import br.com.budismo.nikkyojers.data.User;
 
 /**
  * Created by marcio.ikeda on 22/01/2018.
@@ -21,10 +15,9 @@ import java.util.List;
 
 public class FirebaseUIHelper {
 
-    public static final int RC_SIGN_IN = 1;
-
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private DatabaseReference mDatabase;
     private SignListener mListener;
 
     public interface SignListener {
@@ -34,6 +27,7 @@ public class FirebaseUIHelper {
 
     public FirebaseUIHelper(SignListener listener) {
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mListener = listener;
         initAuthStateListener();
     }
@@ -46,6 +40,9 @@ public class FirebaseUIHelper {
                 if (user != null) {
                     // User is signed in
                     mListener.onSignIn();
+                    // Save/update user to firebase database
+                    mDatabase.child("users").child(user.getUid())
+                            .setValue(new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getProviderId()));
                 } else {
                     // User is signed out
                     mListener.onSignOut();
@@ -62,21 +59,6 @@ public class FirebaseUIHelper {
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
-    }
-
-    public void startFirebaseUIActivity(FragmentActivity activity) {
-        activity.startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false)
-                        .setAvailableProviders(
-                                Arrays.asList(
-                                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-                                )
-                        )
-                        .build(),
-                RC_SIGN_IN);
     }
 
     public FirebaseUser getUser() {

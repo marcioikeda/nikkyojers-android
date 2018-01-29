@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.firebase.ui.auth.AuthUI;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import br.com.budismo.nikkyojers.R;
 
@@ -22,6 +26,8 @@ import br.com.budismo.nikkyojers.R;
  */
 
 public class Util {
+
+    public static final int RC_SIGN_IN = 1;
 
     public static void showKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -52,5 +58,20 @@ public class Util {
         } catch (NoSuchAlgorithmException e) {
 
         }
+    }
+
+    public static void startFirebaseUIActivity(FragmentActivity activity) {
+        activity.startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        .setAvailableProviders(
+                                Arrays.asList(
+                                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+                                )
+                        )
+                        .build(),
+                RC_SIGN_IN);
     }
 }
