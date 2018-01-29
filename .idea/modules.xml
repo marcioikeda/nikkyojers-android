@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://D:\AndroidStudioProjects\nikkyojers-android\Nikkyojers.iml" filepath="D:\AndroidStudioProjects\nikkyojers-android\Nikkyojers.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\AndroidStudioProjects\nikkyojers-android\app\app.iml" filepath="D:\AndroidStudioProjects\nikkyojers-android\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nikkyojers-android.iml" filepath="$PROJECT_DIR$/nikkyojers-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/nikkyojers-android.iml" filepath="$PROJECT_DIR$/nikkyojers-android.iml" />
     </modules>
   </component>

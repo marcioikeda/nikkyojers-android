@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
 import br.com.budismo.nikkyojers.ui.AddPostActivity;
+import br.com.budismo.nikkyojers.ui.FeedFragment;
 import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -58,7 +59,16 @@ public class MainActivity extends AppCompatActivity
         mIvProfile = navigationView.getHeaderView(0).findViewById(R.id.profile_image);
         mTvUsername = navigationView.getHeaderView(0).findViewById(R.id.tv_username);
         mTvEmail = navigationView.getHeaderView(0).findViewById(R.id.tv_email);
+        Util.logKeyHash(this);
         firebaseUIHelper = new FirebaseUIHelper(this);
+
+        if (savedInstanceState == null) {
+            //Inflate Main and check drawer menu
+            FeedFragment fragment = new FeedFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_main, fragment).commit();
+            navigationView.setCheckedItem(R.id.nav_news);
+        }
     }
 
     @Override
@@ -112,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_news) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_calendar) {
 
         } else if (id == R.id.nav_achievements) {
@@ -163,4 +173,5 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, "Signed out", Toast.LENGTH_LONG).show();
         firebaseUIHelper.startFirebaseUIActivity(this);
     }
+
 }
