@@ -1,4 +1,4 @@
-package br.com.budismo.nikkyojers.ui;
+package br.com.budismo.nikkyojers.ui.feed;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;

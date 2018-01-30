@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.budismo.nikkyojers.ui.AddPostActivity">
+    tools:context="br.com.budismo.nikkyojers.ui.addpost.AddPostActivity">
 
     <include layout="@layout/content_add_post" />
 

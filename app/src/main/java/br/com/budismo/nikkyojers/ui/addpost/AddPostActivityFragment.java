@@ -1,4 +1,4 @@
-package br.com.budismo.nikkyojers.ui;
+package br.com.budismo.nikkyojers.ui.addpost;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

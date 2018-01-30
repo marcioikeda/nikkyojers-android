@@ -1,4 +1,4 @@
-package br.com.budismo.nikkyojers.ui;
+package br.com.budismo.nikkyojers.ui.feed;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ public class FeedFragment extends Fragment {
     private ChildEventListener mChildEventListener;
 
     private FeedAdapter mFeedAdapter;
+    private ProgressBar mProgressBar;
 
     @Nullable
     @Override
@@ -38,6 +40,7 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         mPostsDatabaseReference = FirebaseDatabase.getInstance().getReference().child("posts");
+        mProgressBar = view.findViewById(R.id.progress_bar);
         mFeedAdapter = new FeedAdapter();
         RecyclerView recyclerView = view.findViewById(R.id.rv_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -64,6 +67,7 @@ public class FeedFragment extends Fragment {
             mChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    mProgressBar.setVisibility(View.GONE);
                     Post post = dataSnapshot.getValue(Post.class);
                     mFeedAdapter.addNewPost(post);
                 }

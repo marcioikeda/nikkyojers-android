@@ -12,20 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
-import br.com.budismo.nikkyojers.ui.AddPostActivity;
-import br.com.budismo.nikkyojers.ui.FeedAdapter;
-import br.com.budismo.nikkyojers.ui.FeedFragment;
+import br.com.budismo.nikkyojers.ui.addpost.AddPostActivity;
+import br.com.budismo.nikkyojers.ui.feed.FeedFragment;
+import br.com.budismo.nikkyojers.ui.hbs.HbsActivity;
 import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -136,7 +132,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_achievements) {
 
         } else if (id == R.id.nav_hbs) {
-
+            Intent intent = new Intent(this, HbsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_about) {
