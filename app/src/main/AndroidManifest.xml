@@ -39,7 +39,8 @@
             android:name=".ui.hbs.HbsActivity"
             android:label="@string/title_activity_hbs"
             android:theme="@style/AppTheme.NoActionBarHbs">
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
     </application>

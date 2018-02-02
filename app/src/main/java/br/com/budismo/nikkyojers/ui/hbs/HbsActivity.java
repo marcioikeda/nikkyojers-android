@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +48,7 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
     private ViewPager mViewPager;
 
     SearchAsyncTask mSearchAsyncTask;
+    MenuItem mMenuSearchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
                 return false;
             }
         });
+        mMenuSearchItem = menu.findItem(R.id.search);
         return true;
     }
 
@@ -125,9 +128,23 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
     }
 
     @Override
-    public void onSearched(SearchResult result) {
+    public void onSearched(final SearchResult result) {
         mViewPager.setCurrentItem(result.getSectionNumber());
-        getSupportFragmentManager().findFragmentById()
+        PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
+        fragment.setTextSearched(result);
+        mMenuSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
+                fragment.clearTextSearched();
+                return true;
+            }
+        });
     }
 
     /**
@@ -139,6 +156,9 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        private TextView mTextView;
+        private NestedScrollView mScrollView;
 
         public PlaceholderFragment() {
         }
@@ -159,9 +179,31 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_hbs, container, false);
-            NestedScrollView scrollView = rootView.findViewById(R.id.section_container);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            mScrollView = rootView.findViewById(R.id.section_container);
+            mTextView = rootView.findViewById(R.id.section_label);
+            setTextFromResource();
+            return rootView;
+        }
 
+        public void setTextSearched(SearchResult result) {
+            int lineNumber = mTextView.getLayout().getLineForOffset(result.getIndexOfQuery());
+            setTextFromHtml(mTextView, result.getfullTextHighlighted());
+            mScrollView.scrollTo(0, mTextView.getLayout().getLineTop(lineNumber));
+        }
+
+        public void clearTextSearched() {
+            setTextFromResource();
+        }
+
+        private void setTextFromHtml(TextView textView, String string) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                textView.setText(Html.fromHtml(string, Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                textView.setText(Html.fromHtml(string));
+            }
+        }
+
+        private void setTextFromResource() {
             String contentString = "";
             int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
 
@@ -177,16 +219,7 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
                     break;
             }
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                textView.setText(Html.fromHtml(contentString, Html.FROM_HTML_MODE_COMPACT));
-            } else {
-                textView.setText(Html.fromHtml(contentString));
-            }
-            return rootView;
-        }
-
-        public void setTextSearched(SearchResult result) {
-
+            setTextFromHtml(mTextView, contentString);
         }
     }
 
@@ -195,6 +228,8 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -211,6 +246,23 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
         public int getCount() {
             // Show 3 total pages.
             return 3;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
         }
     }
 }

@@ -28,12 +28,14 @@ public class SearchAsyncTask extends AsyncTask<String, Void, SearchResult> {
         String query = strings[0];
 
         //Search on whenever the string are, on this case it is on the app, on the resources
-        String highlighted = "&lt;font color=\'red\'&gt;"+query+"&lt;/font&gt;";
+        String highlighted = "<font color='red'>"+query+"</font>";
+        String fullText = mContext.getString(R.string.section_1_content);
         SearchResult result = new SearchResult();
         result.setMatch(true);
-        result.setStringHighlighted(mContext.getString(R.string.section_1_content).replace(query, highlighted));
+        result.setfullTextHighlighted(fullText.replace(query, highlighted));
         result.setSectionNumber(1);
-
+        result.setQuery(query);
+        result.setIndexOfQuery(fullText.indexOf(query));
 
         return result;
     }
