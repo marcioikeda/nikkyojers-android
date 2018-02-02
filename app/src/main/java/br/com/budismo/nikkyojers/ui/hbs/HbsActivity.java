@@ -2,9 +2,11 @@ package br.com.budismo.nikkyojers.ui.hbs;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +29,7 @@ import android.widget.Toast;
 
 import br.com.budismo.nikkyojers.R;
 
-public class HbsActivity extends AppCompatActivity {
+public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.OnSearch{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,6 +45,8 @@ public class HbsActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    SearchAsyncTask mSearchAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class HbsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(HbsActivity.this, "Query:" + query, Toast.LENGTH_SHORT).show();
+                mSearchAsyncTask = new SearchAsyncTask(HbsActivity.this, HbsActivity.this);
+                mSearchAsyncTask.execute(query);
                 return false;
             }
 
@@ -107,6 +113,21 @@ public class HbsActivity extends AppCompatActivity {
         }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mSearchAsyncTask != null) {
+            mSearchAsyncTask.cancel(true);
+            mSearchAsyncTask = null;
+        }
+    }
+
+    @Override
+    public void onSearched(SearchResult result) {
+        mViewPager.setCurrentItem(result.getSectionNumber());
+        getSupportFragmentManager().findFragmentById()
     }
 
     /**
@@ -138,6 +159,7 @@ public class HbsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_hbs, container, false);
+            NestedScrollView scrollView = rootView.findViewById(R.id.section_container);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 
             String contentString = "";
@@ -161,6 +183,10 @@ public class HbsActivity extends AppCompatActivity {
                 textView.setText(Html.fromHtml(contentString));
             }
             return rootView;
+        }
+
+        public void setTextSearched(SearchResult result) {
+
         }
     }
 
