@@ -1,4 +1,4 @@
-package br.com.budismo.nikkyojers.ui.addpost;
+package br.com.budismo.nikkyojers.ui.feed;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -14,14 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
-import br.com.budismo.nikkyojers.ui.addpost.AddPostActivity;
+import br.com.budismo.nikkyojers.ui.feed.AddPostActivity;
 import br.com.budismo.nikkyojers.ui.calendar.CalendarFragment;
 import br.com.budismo.nikkyojers.ui.feed.FeedFragment;
 import br.com.budismo.nikkyojers.ui.hbs.HbsActivity;
