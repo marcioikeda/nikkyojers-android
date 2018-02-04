@@ -1,8 +1,8 @@
 package br.com.budismo.nikkyojers.ui.feed;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.R;
-import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
 import br.com.budismo.nikkyojers.data.Post;
 import br.com.budismo.nikkyojers.util.Util;
 

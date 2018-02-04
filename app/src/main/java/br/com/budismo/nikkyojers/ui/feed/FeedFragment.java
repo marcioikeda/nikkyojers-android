@@ -1,7 +1,6 @@
 package br.com.budismo.nikkyojers.ui.feed;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import br.com.budismo.nikkyojers.MainActivity;
 import br.com.budismo.nikkyojers.R;
 import br.com.budismo.nikkyojers.data.Post;
 

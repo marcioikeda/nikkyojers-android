@@ -10,7 +10,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -18,8 +17,6 @@ import com.firebase.ui.auth.AuthUI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-
-import br.com.budismo.nikkyojers.R;
 
 /**
  * Created by marcio.ikeda on 23/01/2018.

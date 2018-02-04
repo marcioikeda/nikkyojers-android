@@ -32,15 +32,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
     private List<Post> mPosts = new ArrayList<>();
     private DatabaseReference mDatabase;
 
-    public List<Post> getPosts() {
-        return mPosts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.mPosts = posts;
-        notifyDataSetChanged();
-    }
-
     public void addNewPost(Post post) {
         mPosts.add(post);
         notifyItemInserted(mPosts.size() - 1);

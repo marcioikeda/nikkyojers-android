@@ -2,7 +2,6 @@ package br.com.budismo.nikkyojers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
 import br.com.budismo.nikkyojers.ui.calendar.AddEventActivity;
-import br.com.budismo.nikkyojers.ui.feed.AddPostActivity;
 import br.com.budismo.nikkyojers.ui.calendar.CalendarFragment;
+import br.com.budismo.nikkyojers.ui.feed.AddPostActivity;
 import br.com.budismo.nikkyojers.ui.feed.FeedFragment;
 import br.com.budismo.nikkyojers.ui.hbs.HbsActivity;
 import br.com.budismo.nikkyojers.util.Util;

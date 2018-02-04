@@ -2,10 +2,9 @@ package br.com.budismo.nikkyojers.ui.calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.ParseException;
@@ -204,9 +204,8 @@ public class AddEventActivityFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_publish) {
             Event event = getNewEventFromView();
-            if (validateInput(event)) {
+            if (event != null && validateInput(event)) {
                 createEvent(event);
-                getActivity().finish();
             }
         }
         return super.onOptionsItemSelected(item);
@@ -237,64 +236,39 @@ public class AddEventActivityFragment extends Fragment {
                 endDate.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE));
             }
 
-            newEvent.
+            newEvent.startDate = startDate.getTimeInMillis();
+            newEvent.endDate = endDate.getTimeInMillis();
 
         } catch (ParseException e) {
             Snackbar.make(mStartDateView, getString(R.string.addevent_date_error), Snackbar.LENGTH_SHORT).show();
             e.printStackTrace();
+            return null;
         }
+
+        return newEvent;
     }
 
-    private boolean validateInput() {
-        if (TextUtils.isEmpty(mEditTitleView.getText())) {
+    private boolean validateInput(Event event) {
+        if (TextUtils.isEmpty(event.title)) {
             Snackbar.make(mEditTitleView, getString(R.string.addevent_title_error), Snackbar.LENGTH_SHORT).show();
             return false;
-        } else {
-            Calendar startDate = Calendar.getInstance();
-            Calendar startTime = Calendar.getInstance();
-            Calendar endDate = Calendar.getInstance();
-            Calendar endTime = Calendar.getInstance();
-            try {
-                startDate.setTime(sdfDate.parse((String) mStartDateView.getText()));
-                startTime.setTime(sdfTime.parse((String) mStartTimeView.getText()));
-                startDate.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
-                startDate.set(Calendar.MINUTE, startDate.get(Calendar.MINUTE));
-
-                endDate.setTime(sdfDate.parse((String) mEndDateView.getText()));
-                endTime.setTime(sdfTime.parse((String) mEndTimeView.getText()));
-                endDate.set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY));
-                endDate.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE));
-
-                if (!startDate.before(endDate)) {
-                    Snackbar.make(mStartDateView, getString(R.string.addevent_date_notbefore), Snackbar.LENGTH_SHORT).show();
-                    return false;
-                }
-
-            } catch (ParseException e) {
-                Snackbar.make(mStartDateView, getString(R.string.addevent_date_error), Snackbar.LENGTH_SHORT).show();
-                e.printStackTrace();
-                return false;
-            }
-
+        } else if (event.startDate >= event.endDate){
+            Snackbar.make(mStartDateView, getString(R.string.addevent_date_notbefore), Snackbar.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }
 
-    private void createEvent() {
-        Event newEvent = new Event();
-        newEvent.title = mEditTitleView.getText().toString();
-        newEvent.allDay = mSwitchAllDay.isChecked();
-        newEvent.startDate
-
-        firebaseDatabaseHelper.createNewEvent(newPost, new DatabaseReference.CompletionListener() {
+    private void createEvent(Event event) {
+        firebaseDatabaseHelper.createNewEvent(event, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(AddPostActivity.this, databaseError.getCode() + ":" + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), databaseError.getCode() + ":" + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(AddPostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Posted!", Toast.LENGTH_LONG).show();
                 }
-                finish();
+                getActivity().finish();
             }
         });
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="br.com.budismo.nikkyojers">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -46,7 +45,7 @@
         <activity
             android:name=".ui.calendar.AddEventActivity"
             android:label="@string/title_activity_add_event"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

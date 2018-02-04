@@ -19,11 +19,4 @@
         app:srcCompat="@drawable/ic_add_black_24dp"
         android:tint="@android:color/white"/>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:indeterminate="true" />
-
 </FrameLayout>
