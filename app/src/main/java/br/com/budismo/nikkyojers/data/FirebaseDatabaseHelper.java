@@ -39,6 +39,11 @@ public class FirebaseDatabaseHelper {
         mDatabase.updateChildren(childUpdates, listener);
     }
 
+    public void createNewEvent(Event event, DatabaseReference.CompletionListener listener) {
+        String key = mDatabase.child("events").push().getKey();
+        mDatabase.child("events").child(key).setValue(event, listener);
+    }
+
 /*
     private void onStarClicked(DatabaseReference postRef, final String uid) {
         postRef.runTransaction(new Transaction.Handler() {

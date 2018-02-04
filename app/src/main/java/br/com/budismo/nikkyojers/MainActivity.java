@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseUser;
 
 import br.com.budismo.nikkyojers.auth.FirebaseUIHelper;
+import br.com.budismo.nikkyojers.ui.calendar.AddEventActivity;
 import br.com.budismo.nikkyojers.ui.feed.AddPostActivity;
 import br.com.budismo.nikkyojers.ui.calendar.CalendarFragment;
 import br.com.budismo.nikkyojers.ui.feed.FeedFragment;
@@ -28,7 +29,8 @@ import br.com.budismo.nikkyojers.util.Util;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FirebaseUIHelper.SignListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FirebaseUIHelper.SignListener,
+        FeedFragment.FeedListener, CalendarFragment.CalendarListener {
 
     private FirebaseUIHelper firebaseUIHelper;
     private CircleImageView mIvProfile;
@@ -42,15 +44,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
-                startActivity(intent);
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -198,4 +191,15 @@ public class MainActivity extends AppCompatActivity
         Util.startFirebaseUIActivity(this);
     }
 
+    @Override
+    public void onFabAddPostClicked() {
+        Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFabAddEventClicked() {
+        Intent intent = new Intent(MainActivity.this, AddEventActivity.class);
+        startActivity(intent);
+    }
 }

@@ -33,5 +33,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_add_event">AddEventActivity</string>
+    <string name="title_activity_add_event">New Event</string>
+    <string name="allday">All day</string>
+    <string name="hint_post_description">Description, deliver a message for the people</string>
+    <string name="hint_post_title">Post title, subdescription title</string>
+    <string name="hint_event_description">Event description</string>
+    <string name="hint_event_title">Enter event title</string>
+    <string name="hint_location">Location</string>
+    <string name="action_create">Create</string>
+    <string name="addevent_title_error">Title can`t be empty</string>
+    <string name="addevent_date_error">Error parsing date or time</string>
+    <string name="addevent_date_notbefore">Start date should be before End Date!</string>
 </resources>

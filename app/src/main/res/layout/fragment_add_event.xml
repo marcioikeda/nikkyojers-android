@@ -7,4 +7,120 @@
     tools:context="br.com.budismo.nikkyojers.ui.calendar.AddEventActivityFragment"
     tools:showIn="@layout/activity_add_event">
 
+    <EditText
+        android:id="@+id/edit_event_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="@string/hint_event_title"/>
+
+    <Switch
+        android:id="@+id/switch_allday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/allday"
+        android:textSize="16sp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/edit_event_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_title" />
+
+    <TextView
+        android:id="@+id/tv_datestart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/switch_allday"
+        app:layout_constraintTop_toBottomOf="@+id/switch_allday"
+        tools:text="Mon, Feb 5" />
+
+    <TextView
+        android:id="@+id/tv_timestart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_datestart"
+        app:layout_constraintTop_toTopOf="@+id/tv_datestart"
+        tools:text="2:30 PM" />
+
+    <TextView
+        android:id="@+id/tv_dateend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_datestart"
+        app:layout_constraintTop_toBottomOf="@+id/tv_datestart"
+        tools:text="Mon, Feb 5" />
+
+    <TextView
+        android:id="@+id/tv_timeend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateend"
+        app:layout_constraintTop_toTopOf="@+id/tv_dateend"
+        tools:text="5:00 PM" />
+
+    <EditText
+        android:id="@+id/edit_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dateend"
+        android:hint="@string/hint_location"/>
+
+    <EditText
+        android:id="@+id/edit_event_description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:gravity="start"
+        android:hint="@string/hint_event_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/location"
+        app:layout_constraintTop_toBottomOf="@+id/location" />
+
 </android.support.constraint.ConstraintLayout>
