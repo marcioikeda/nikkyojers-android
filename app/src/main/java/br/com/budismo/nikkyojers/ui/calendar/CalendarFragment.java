@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import br.com.budismo.nikkyojers.R;
 
 /**
@@ -54,6 +56,12 @@ public class CalendarFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).setTitle(R.string.title_calendar);
+    }
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -80,6 +88,10 @@ public class CalendarFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         mViewPager = rootView.findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        Calendar calendar = Calendar.getInstance();
+        int position = calendar.get(Calendar.MONTH);
+        mViewPager.setCurrentItem(position);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

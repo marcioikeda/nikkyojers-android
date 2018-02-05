@@ -139,14 +139,13 @@ public class MainActivity extends AppCompatActivity
             CalendarFragment fragment = CalendarFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_main, fragment).addToBackStack(null).commit();
-        } else if (id == R.id.nav_achievements) {
-
+//        } else if (id == R.id.nav_achievements) {
         } else if (id == R.id.nav_hbs) {
             Intent intent = new Intent(this, HbsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_settings) {
+//        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_about) {
+//        } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_logoff) {
             firebaseUIHelper.signOut();

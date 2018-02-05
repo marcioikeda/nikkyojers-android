@@ -18,7 +18,7 @@
     <string name="facebook_application_id" translatable="false">1783058972011642</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1783058972011642</string>
     <string name="title_activity_add_post">Create new post</string>
-    <string name="title_activity_hbs">HbsActivity</string>
+    <string name="title_activity_hbs">HBS</string>
     <string name="tab_text_1">HBS</string>
     <string name="tab_text_2">Sutra Lotus</string>
     <string name="tab_text_3">Masters</string>
@@ -27,7 +27,7 @@
     <string name="section_3_1_content">&lt;p&gt;&lt;strong&gt;Great Master Nichiren Daibossatsu - Renaissance of the Jyougyou Bossatsu of the Age Mappou&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;The Great Master Nichiren Daibossatsu was born in a fishing province in Kominato in the Boso Peninsula, Chiba Prefecture today, on 16 February 1222. At his birth, he was baptized with the name Zennitimaro.&lt;/p&gt;&lt;p&gt;Growing up with the love of his parents, Zennitimaro developed with health and, at 12 years old, on May 12, 1233, he entered the monastic life as a disciple of Douzenbou in Seityouji temple. In his monastic initiation was named Yakuoumaro. As an apprentice, he devoted himself to the spiritual enhancement, striving in practice and study. After four years of dedication, he was ordained under the name Zeshoubou Rentyou.&lt;/p&gt;&lt;p&gt;The young monk Rentyou was dedicated hard to practice and study. However, realizing that to become a great monk should have great wisdom, he retreated to the sanctuary of Bossatsu Kokuzo, located in Temple Seityouji himself, and begged that he might become the wisest man in all Japan. His wish came true and on this day, the Bossatsu Kokuzo appeared handing her the gemstone that symbolizes the wisdom he had acquired.&lt;/p&gt;&lt;p&gt;At 17 he went down the mountain where was the Seityouji Temple to study in Kamakura. After a few years, he returned to Seityouji Temple, but felt an urgent need to further deepen in the Buddhism studies, and at 21 years of age went to the Monastery Hieizan in Kyoto.&lt;/p&gt;&lt;p&gt;This Monastery was the most prestigious college of monks of the time, belonging to the branch of Tendai Buddhism, founded by Saityou (Dengyou Daishi, 767 ~ 822) - considered one of the predecessors of Nichiren - who fought to rescue the true values ​​contained in the teachings of Buddha and not just follow orders and formalities imposed by the imperial government for convenience of the monks of the time.&lt;/p&gt;&lt;p&gt;Rentyou devoted himself deeply to studies and practices, wandering for 12 years in various locations and temples. After years of studies on the true teachings of the Buddha, he found in the Lotus Sutra the highest teaching, intent and true essence of the Buddha \'s compassion, which is revealed in Honmon Happon (Primordial Way of the Lotus Sutra - chapters 15 to 22). In it, the Buddha clarified that the quintessence of his teachings to the current was Mappou (Age of Decadence, according to Buddhist doctrine) is the Mantra Sacred NAMUMYOUHOURENGUEKYOU .&lt;/p&gt;&lt;p&gt;So he returned to the temple Seityouji, and on April 28, 1253, at 32 years of age, at sunrise pronounced NAMUMYOUHOURENGUEKYOU  serenely, declaring the beginning of a new era of the true redemption of Buddhism, facing the beings' needs, so that all were to become a Bossatsu and to attain Buddhahood.&lt;/p&gt;&lt;p&gt;From this day was called Nichiren ( NiTi = Sun, Ren = Lotus), who like the sun and the moon illuminates the darkness of the heart of things, and that as the Lotus Flower, It is fully realized regardless of the circumstances.&lt;/p&gt;&lt;p&gt;Since the beginning of the practice of prayer Odaimoku ( NAMUMYOUHOURENGUEKYOU ) to her the death, she went through "Big Four admonitions" and countless other obstacles. All served to strengthen and authenticate their status as "Sent from Primordial Buddha," ie Jyougyou Bossatsu as provided in Lotus Sutra. His determination, compassion and vigor, founded by faith in all activities, are its main features, which are still practiced by his followers. He departed this world, hiding physically on October 13, 1282, at 60 years old.&lt;/p&gt;</string>
     <string name="search_title">Search</string>
     <string name="search_hint">Word</string>
-    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_calendar">Calendar</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="calendar_title">Calendar</string>
 
@@ -44,4 +44,9 @@
     <string name="addevent_title_error">Title can`t be empty</string>
     <string name="addevent_date_error">Error parsing date or time</string>
     <string name="addevent_date_notbefore">Start date should be before End Date!</string>
+    <string name="calendar_noevent">No Events</string>
+    <string name="eventdetail_notfound">Event not found</string>
+    <string name="content_time">Time</string>
+    <string name="content_location">Location</string>
+    <string name="eventdetail_title">Event Detail</string>
 </resources>

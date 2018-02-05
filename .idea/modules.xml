@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Nikkyojers.iml" filepath="$PROJECT_DIR$/Nikkyojers.iml" />
       <module fileurl="file://D:\AndroidStudioProjects\nikkyojers-android\Nikkyojers.iml" filepath="D:\AndroidStudioProjects\nikkyojers-android\Nikkyojers.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nikkyojers-android.iml" filepath="$PROJECT_DIR$/nikkyojers-android.iml" />
       <module fileurl="file://C:\AndroidStudioProjects\Nikkyojers\nikkyojers-android.iml" filepath="C:\AndroidStudioProjects\Nikkyojers\nikkyojers-android.iml" />
     </modules>
   </component>

@@ -4,6 +4,7 @@ package br.com.budismo.nikkyojers.ui.calendar;
  * Created by marcioikeda on 04/02/18.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ import java.util.Locale;
 import br.com.budismo.nikkyojers.R;
 import br.com.budismo.nikkyojers.data.Event;
 
+import static br.com.budismo.nikkyojers.ui.calendar.EventDetailActivity.ARG_EVENT_KEY;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -43,16 +46,19 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
     private static final String ARG_MONTH = "month";
     private static final String ARG_YEAR = "year";
 
-    private SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
-    private ProgressBar mProgressBar;
+    private SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
     private CalendarAdapter mCalendarAdapter;
     private Calendar startMonth;
     private Calendar endMonth;
 
+    private TextView mTvNoEvents;
+    private ProgressBar mProgressBar;
+
     //Firebase Database
     private DatabaseReference mEventsDatabaseReference;
+    private Query mQueryMonth;
     private ChildEventListener mChildEventListener;
-    private Ch
+    private ValueEventListener mChildSingleEventListener;
 
     public CalendarPageFragment() {
     }
@@ -102,6 +108,7 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
         endMonth.set(Calendar.MILLISECOND, endMonth.getActualMaximum(Calendar.MILLISECOND));
         Log.d("CALENDAR", "MONTH: " + getArguments().getInt(ARG_MONTH) + " endMonth: " + endMonth.getTimeInMillis());
         mEventsDatabaseReference = FirebaseDatabase.getInstance().getReference().child("events");
+        mQueryMonth = mEventsDatabaseReference.orderByChild("startDate").startAt(startMonth.getTimeInMillis()).endAt(endMonth.getTimeInMillis());
     }
 
     @Override
@@ -111,6 +118,7 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
         TextView tvMonth= rootView.findViewById(R.id.tv_calendar_month);
         mProgressBar = rootView.findViewById(R.id.progress_bar);
         RecyclerView recyclerView = rootView.findViewById(R.id.rv_calendar);
+        mTvNoEvents = rootView.findViewById(R.id.tv_calendar_noevent);
 
 
         tvMonth.setText(sdfMonth.format(startMonth.getTime()));
@@ -135,14 +143,17 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
     }
 
     private void attachDatabaseReadListener() {
-        if (mChildEventListener == null) {
+        if (mChildEventListener == null && mChildSingleEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    mProgressBar.setVisibility(View.GONE);
                     Event event = dataSnapshot.getValue(Event.class);
-                    event.key = dataSnapshot.getKey();
-                    mCalendarAdapter.addNewEvent(event);
+                    if (event != null) {
+                        mProgressBar.setVisibility(View.GONE);
+                        mTvNoEvents.setVisibility(View.GONE);
+                        event.key = dataSnapshot.getKey();
+                        mCalendarAdapter.addNewEvent(event);
+                    }
                 }
 
                 @Override
@@ -165,14 +176,12 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
 
                 }
             };
-            Query queryMonth = mEventsDatabaseReference.orderByChild("startDate").startAt(startMonth.getTimeInMillis()).endAt(endMonth.getTimeInMillis());
-            queryMonth.addChildEventListener(mChildEventListener);
-            queryMonth.addListenerForSingleValueEvent(new ValueEventListener() {
+            mChildSingleEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() == null) {
                         mProgressBar.setVisibility(View.GONE);
-
+                        mTvNoEvents.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -180,19 +189,29 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
+            };
+
+            mQueryMonth.addChildEventListener(mChildEventListener);
+            mQueryMonth.addListenerForSingleValueEvent(mChildSingleEventListener);
         }
     }
 
     private void detachDatabaseReadListener() {
-        if (mChildEventListener != null) {
-            mEventsDatabaseReference.removeEventListener(mChildEventListener);
+        if (mChildEventListener != null && mQueryMonth != null) {
+            mQueryMonth.removeEventListener(mChildEventListener);
             mChildEventListener = null;
+        }
+        if (mChildSingleEventListener != null && mQueryMonth != null) {
+            mQueryMonth.removeEventListener(mChildSingleEventListener);
+            mChildSingleEventListener = null;
         }
     }
 
     @Override
     public void onEventClicked(String key) {
-        Toast.makeText(getActivity(), "Event: " + key, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Event: " + key, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+        intent.putExtra(ARG_EVENT_KEY, key);
+        getActivity().startActivity(intent);
     }
 }

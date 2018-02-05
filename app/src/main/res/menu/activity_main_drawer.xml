@@ -14,24 +14,24 @@
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_date_range_black_24dp"
             android:title="@string/nav_calendar_title" />
-        <item
+<!--        <item
             android:id="@+id/nav_achievements"
             android:icon="@drawable/ic_star_black_24dp"
-            android:title="@string/nav_achievements_title" />
+            android:title="@string/nav_achievements_title" />-->
     </group>
     <group android:id="@+id/nav_bottom">
         <item
             android:id="@+id/nav_hbs"
             android:icon="@drawable/ic_account_balance_black_24dp"
             android:title="@string/nav_hbs_title" />
-        <item
+<!--        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/nav_settings_title" />
-        <item
+            android:title="@string/nav_settings_title" />-->
+<!--        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="@string/nav_about_title" />
+            android:title="@string/nav_about_title" />-->
         <item
             android:id="@+id/nav_logoff"
             android:icon="@drawable/ic_exit_to_app_black_24dp"

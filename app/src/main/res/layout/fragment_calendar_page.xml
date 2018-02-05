@@ -45,8 +45,20 @@
         app:layout_constraintTop_toTopOf="@+id/rv_calendar" />
 
     <TextView
-        android:id="@+id/tv_noevents"
+        android:id="@+id/tv_calendar_noevent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/calendar_noevent"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_calendar"
+        app:layout_constraintEnd_toEndOf="@+id/rv_calendar"
+        app:layout_constraintStart_toStartOf="@+id/rv_calendar"
+        app:layout_constraintTop_toTopOf="@+id/rv_calendar" />
+
 
 </android.support.constraint.ConstraintLayout>
