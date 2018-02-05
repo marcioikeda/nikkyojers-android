@@ -5,20 +5,32 @@ package br.com.budismo.nikkyojers.ui.calendar;
  */
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import br.com.budismo.nikkyojers.R;
+import br.com.budismo.nikkyojers.data.Event;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -34,6 +46,13 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
     private SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
     private ProgressBar mProgressBar;
     private CalendarAdapter mCalendarAdapter;
+    private Calendar startMonth;
+    private Calendar endMonth;
+
+    //Firebase Database
+    private DatabaseReference mEventsDatabaseReference;
+    private ChildEventListener mChildEventListener;
+    private Ch
 
     public CalendarPageFragment() {
     }
@@ -62,38 +81,118 @@ public class CalendarPageFragment extends Fragment implements CalendarAdapter.Ca
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startMonth = Calendar.getInstance();
+        startMonth.set(Calendar.YEAR, getArguments().getInt(ARG_YEAR));
+        startMonth.set(Calendar.MONTH, getArguments().getInt(ARG_MONTH));
+        startMonth.set(Calendar.DAY_OF_MONTH, 1);
+        startMonth.set(Calendar.HOUR_OF_DAY, 0);
+        startMonth.set(Calendar.MINUTE, 0);
+        startMonth.set(Calendar.SECOND, 0);
+        startMonth.set(Calendar.MILLISECOND, 0);
+        Log.d("CALENDAR", "MONTH: " + getArguments().getInt(ARG_MONTH) + " startMonth: " + startMonth.getTimeInMillis());
+        endMonth = Calendar.getInstance();
+        endMonth.set(Calendar.YEAR, getArguments().getInt(ARG_YEAR));
+        endMonth.set(Calendar.MONTH, getArguments().getInt(ARG_MONTH));
+        endMonth.set(Calendar.DAY_OF_MONTH, endMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+        endMonth.set(Calendar.HOUR_OF_DAY, endMonth.getActualMaximum(Calendar.HOUR_OF_DAY));
+        endMonth.set(Calendar.MINUTE, endMonth.getActualMaximum(Calendar.MINUTE));
+        endMonth.set(Calendar.SECOND, endMonth.getActualMaximum(Calendar.SECOND));
+        endMonth.set(Calendar.MILLISECOND, endMonth.getActualMaximum(Calendar.MILLISECOND));
+        Log.d("CALENDAR", "MONTH: " + getArguments().getInt(ARG_MONTH) + " endMonth: " + endMonth.getTimeInMillis());
+        mEventsDatabaseReference = FirebaseDatabase.getInstance().getReference().child("events");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar_page, container, false);
         TextView tvMonth= rootView.findViewById(R.id.tv_calendar_month);
         mProgressBar = rootView.findViewById(R.id.progress_bar);
         RecyclerView recyclerView = rootView.findViewById(R.id.rv_calendar);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, getArguments().getInt(ARG_YEAR));
-        calendar.set(Calendar.MONTH, getArguments().getInt(ARG_MONTH));
-        tvMonth.setText(sdfMonth.format(calendar.getTime()));
 
+
+        tvMonth.setText(sdfMonth.format(startMonth.getTime()));
         mCalendarAdapter = new CalendarAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.setAdapter(mCalendarAdapter);
+
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //attachDatabaseReadListener();
+        attachDatabaseReadListener();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //detachDatabaseReadListener();
+        detachDatabaseReadListener();
         mCalendarAdapter.clear();
+    }
+
+    private void attachDatabaseReadListener() {
+        if (mChildEventListener == null) {
+            mChildEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    mProgressBar.setVisibility(View.GONE);
+                    Event event = dataSnapshot.getValue(Event.class);
+                    event.key = dataSnapshot.getKey();
+                    mCalendarAdapter.addNewEvent(event);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            Query queryMonth = mEventsDatabaseReference.orderByChild("startDate").startAt(startMonth.getTimeInMillis()).endAt(endMonth.getTimeInMillis());
+            queryMonth.addChildEventListener(mChildEventListener);
+            queryMonth.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() == null) {
+                        mProgressBar.setVisibility(View.GONE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void detachDatabaseReadListener() {
+        if (mChildEventListener != null) {
+            mEventsDatabaseReference.removeEventListener(mChildEventListener);
+            mChildEventListener = null;
+        }
     }
 
     @Override
     public void onEventClicked(String key) {
-
+        Toast.makeText(getActivity(), "Event: " + key, Toast.LENGTH_SHORT).show();
     }
 }

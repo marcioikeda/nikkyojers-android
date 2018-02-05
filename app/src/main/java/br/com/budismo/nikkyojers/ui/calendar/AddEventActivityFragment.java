@@ -52,7 +52,7 @@ public class AddEventActivityFragment extends Fragment {
     private EditText mEditLocationView;
     private EditText mEditDescriptionView;
 
-    final SimpleDateFormat sdfDate = new SimpleDateFormat("E, MMM d", Locale.US);
+    final SimpleDateFormat sdfDate = new SimpleDateFormat("E, MMM d, yyyy", Locale.US);
     final SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
 
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
