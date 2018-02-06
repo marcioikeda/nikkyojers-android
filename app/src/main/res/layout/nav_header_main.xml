@@ -17,7 +17,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:paddingTop="8dp"
-        android:src="@drawable/placeholder"
+        app:srcCompat="@drawable/ic_account_box_deeppurple_24dp"
         app:civ_border_width="1dp"
         app:civ_border_color="@android:color/white"/>
 
@@ -26,13 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Android Studio"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

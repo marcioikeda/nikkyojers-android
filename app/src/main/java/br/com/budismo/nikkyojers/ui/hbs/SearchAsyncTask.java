@@ -27,15 +27,33 @@ public class SearchAsyncTask extends AsyncTask<String, Void, SearchResult> {
     protected SearchResult doInBackground(String... strings) {
         String query = strings[0];
 
-        //Search on whenever the string are, on this case it is on the app, on the resources
+        //Search on whenever the string are, on this case it is on the app, on the resources.
+        //This search result needs to be improved, it returns the first match ordering by the sections.
         String highlighted = "<font color='red'>"+query+"</font>";
-        String fullText = mContext.getString(R.string.section_1_content);
+        String fullText1 = mContext.getString(R.string.section_1_content);
+        String fullText2 = mContext.getString(R.string.section_2_content);
+        String fullText3 = mContext.getString(R.string.section_3_1_content);
         SearchResult result = new SearchResult();
-        result.setMatch(true);
-        result.setfullTextHighlighted(fullText.replace(query, highlighted));
-        result.setSectionNumber(1);
         result.setQuery(query);
-        result.setIndexOfQuery(fullText.indexOf(query));
+
+        if (fullText1.contains(query)) {
+            result.setMatch(true);
+            result.setfullTextHighlighted(fullText1.replace(query, highlighted));
+            result.setSectionNumber(0);
+            result.setIndexOfQuery(fullText1.indexOf(query));
+        } else if (fullText2.contains(query)) {
+            result.setMatch(true);
+            result.setfullTextHighlighted(fullText2.replace(query, highlighted));
+            result.setSectionNumber(1);
+            result.setIndexOfQuery(fullText2.indexOf(query));
+        } else if (fullText3.contains(query)) {
+            result.setMatch(true);
+            result.setfullTextHighlighted(fullText3.replace(query, highlighted));
+            result.setSectionNumber(2);
+            result.setIndexOfQuery(fullText3.indexOf(query));
+        } else {
+            result.setMatch(false);
+        }
 
         return result;
     }

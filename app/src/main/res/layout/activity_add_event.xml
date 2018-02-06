@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/addevent_container"
     tools:context="br.com.budismo.nikkyojers.ui.calendar.AddEventActivity">
 
     <include layout="@layout/content_add_event" />

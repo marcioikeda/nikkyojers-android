@@ -3,6 +3,7 @@ package br.com.budismo.nikkyojers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -34,22 +35,23 @@ public class MainActivity extends AppCompatActivity
     private CircleImageView mIvProfile;
     private TextView mTvUsername;
     private TextView mTvEmail;
+    private DrawerLayout mDrawer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mIvProfile = navigationView.getHeaderView(0).findViewById(R.id.profile_image);
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (!Util.isConnected(this)) {
+            Snackbar.make(mDrawer, getString(R.string.snack_disconnected), Snackbar.LENGTH_SHORT).show();
+        }
         firebaseUIHelper.addAuthStateListener();
     }
 
@@ -94,35 +99,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        /*
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -151,7 +133,7 @@ public class MainActivity extends AppCompatActivity
             firebaseUIHelper.signOut();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -175,8 +157,12 @@ public class MainActivity extends AppCompatActivity
     public void onSignIn() {
         FirebaseUser user = firebaseUIHelper.getUser();
         if (user != null) {
-            Toast.makeText(this, "User: " + user.getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
-            Util.bindUserPictureIntoView(this, user.getPhotoUrl(), mIvProfile);
+            //Toast.makeText(this, "User: " + user.getDisplayName() + " is signed in", Toast.LENGTH_LONG).show();
+            if (user.getPhotoUrl() != null) {
+                Util.bindUserPictureIntoView(this, user.getPhotoUrl(), mIvProfile);
+            } else {
+                Util.bindPlaceholderPictureIntoView(this, mIvProfile);
+            }
             mTvUsername.setText(user.getDisplayName());
             mTvEmail.setText(user.getEmail());
         }
@@ -184,7 +170,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSignOut() {
-        Toast.makeText(this, "Signed out", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Signed out", Toast.LENGTH_LONG).show();
         Util.startFirebaseUIActivity(this);
     }
 

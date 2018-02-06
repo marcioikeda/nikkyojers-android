@@ -3,6 +3,7 @@ package br.com.budismo.nikkyojers.ui.hbs;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,25 +42,25 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
      */
     private ViewPager mViewPager;
 
-    SearchAsyncTask mSearchAsyncTask;
-    MenuItem mMenuSearchItem;
+    private SearchAsyncTask mSearchAsyncTask;
+    private MenuItem mMenuSearchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hbs);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -98,21 +99,6 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-/*        if (id == R.id.action_settings) {
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         if (mSearchAsyncTask != null) {
@@ -123,22 +109,26 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
 
     @Override
     public void onSearched(final SearchResult result) {
-        mViewPager.setCurrentItem(result.getSectionNumber());
-        PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
-        fragment.setTextSearched(result);
-        mMenuSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                return true;
-            }
+        if (result.isMatch()) {
+            mViewPager.setCurrentItem(result.getSectionNumber());
+            PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
+            fragment.setTextSearched(result);
+            mMenuSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                    return true;
+                }
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
-                fragment.clearTextSearched();
-                return true;
-            }
-        });
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getRegisteredFragment(result.getSectionNumber());
+                    fragment.clearTextSearched();
+                    return true;
+                }
+            });
+        } else {
+            Toast.makeText(this, getString(R.string.nosearchresults), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -223,7 +213,7 @@ public class HbsActivity extends AppCompatActivity implements SearchAsyncTask.On
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+        SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

@@ -6,7 +6,7 @@ package br.com.budismo.nikkyojers.ui.hbs;
 
 public class SearchResult {
 
-    boolean isMatch = false;
+    private boolean isMatch = false;
     private int sectionNumber;
     private String query;
     private String fullTextHighlighted;

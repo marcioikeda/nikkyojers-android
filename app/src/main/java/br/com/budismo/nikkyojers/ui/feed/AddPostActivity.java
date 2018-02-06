@@ -1,9 +1,11 @@
 package br.com.budismo.nikkyojers.ui.feed;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
@@ -17,18 +19,29 @@ import br.com.budismo.nikkyojers.util.Util;
 public class AddPostActivity extends AppCompatActivity implements AddPostActivityFragment.AddPostListener{
 
     private boolean mEnablePost = false;
-    private String KEY_ENABLE_POST_STATE = "key_enable_post_state";
+    private static final String KEY_ENABLE_POST_STATE = "key_enable_post_state";
     private FirebaseDatabaseHelper mDatabaseHelper;
+
+    private FrameLayout mFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post);
+        mFrameLayout = findViewById(R.id.addpost_container);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState != null) {
             mEnablePost = savedInstanceState.getBoolean(KEY_ENABLE_POST_STATE, false);
         }
         mDatabaseHelper = new FirebaseDatabaseHelper();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!Util.isConnected(this)) {
+            Snackbar.make(mFrameLayout, getString(R.string.snack_disconnected), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -59,7 +72,7 @@ public class AddPostActivity extends AppCompatActivity implements AddPostActivit
                         if (databaseError != null) {
                             Toast.makeText(AddPostActivity.this, databaseError.getCode() + ":" + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(AddPostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddPostActivity.this, getString(R.string.posted), Toast.LENGTH_LONG).show();
                         }
                         finish();
                     }

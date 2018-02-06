@@ -59,7 +59,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) getActivity()).setTitle(R.string.title_calendar);
+        getActivity().setTitle(R.string.calendar_title);
     }
 
     public CalendarFragment() {
@@ -93,7 +93,7 @@ public class CalendarFragment extends Fragment {
         int position = calendar.get(Calendar.MONTH);
         mViewPager.setCurrentItem(position);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

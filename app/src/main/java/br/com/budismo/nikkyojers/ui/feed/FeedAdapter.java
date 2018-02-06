@@ -60,9 +60,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                holder.tvUserName.setText(user.name);
-                if (!TextUtils.isEmpty(user.photoUrl)) {
-                    Util.bindUserPictureIntoView(holder.ivUserPhoto.getContext(), Uri.parse(user.photoUrl), holder.ivUserPhoto);
+                if (user != null) {
+                    holder.tvUserName.setText(user.name);
+                    if (!TextUtils.isEmpty(user.photoUrl)) {
+                        Util.bindUserPictureIntoView(holder.ivUserPhoto.getContext(), Uri.parse(user.photoUrl), holder.ivUserPhoto);
+                    } else {
+                        Util.bindPlaceholderPictureIntoView(holder.ivUserPhoto.getContext(), holder.ivUserPhoto);
+                    }
                 }
             }
 

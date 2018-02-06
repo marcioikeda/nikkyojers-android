@@ -41,8 +41,12 @@ public class FirebaseUIHelper {
                     // User is signed in
                     mListener.onSignIn();
                     // Save/update user to firebase database
+                    User newUser = new User();
+                    newUser.name = user.getDisplayName();
+                    newUser.photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "";
+                    newUser.provider = user.getProviderId();
                     mDatabase.child("users").child(user.getUid())
-                            .setValue(new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getProviderId()));
+                            .setValue(newUser);
                 } else {
                     // User is signed out
                     mListener.onSignOut();

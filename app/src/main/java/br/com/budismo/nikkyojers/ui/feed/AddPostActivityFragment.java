@@ -24,10 +24,10 @@ import br.com.budismo.nikkyojers.util.Util;
  */
 public class AddPostActivityFragment extends Fragment {
 
-    EditText mEditTitle;
-    EditText mEditDescription;
+    private EditText mEditTitle;
+    private EditText mEditDescription;
 
-    AddPostListener mListener;
+    private AddPostListener mListener;
 
     public interface AddPostListener {
         void onEnableToPost(boolean enable);
@@ -56,34 +56,41 @@ public class AddPostActivityFragment extends Fragment {
         mEditTitle = view.findViewById(R.id.edit_post_title);
         mEditDescription = view.findViewById(R.id.edit_post_description);
         bindUser(view);
-        Util.showKeyboard(view.findViewById(R.id.edit_post_title));
         return view;
     }
 
     private void bindUser(View view) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ImageView imageView = view.findViewById(R.id.iv_profile_image);
-        Util.bindUserPictureIntoView(view.getContext(), user.getPhotoUrl(), imageView);
-        TextView tvUserName = view.findViewById(R.id.tv_username);
-        tvUserName.setText(user.getDisplayName());
-        mEditDescription.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if (user!= null) {
+            if (user.getPhotoUrl() != null) {
+                Util.bindUserPictureIntoView(view.getContext(), user.getPhotoUrl(), imageView);
+            } else {
+                Util.bindPlaceholderPictureIntoView(view.getContext(), imageView);
             }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mListener.onEnableToPost(true);
-                } else {
-                    mListener.onEnableToPost(false);
+            TextView tvUserName = view.findViewById(R.id.tv_username);
+            tvUserName.setText(user.getDisplayName());
+            mEditDescription.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (charSequence.toString().trim().length() > 0) {
+                        mListener.onEnableToPost(true);
+                    } else {
+                        mListener.onEnableToPost(false);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        } else {
+            Util.startFirebaseUIActivity(getActivity());
+        }
     }
 
     public Post getPost() {

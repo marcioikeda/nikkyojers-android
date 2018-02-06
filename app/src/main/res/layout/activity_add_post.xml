@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/addpost_container"
     tools:context="br.com.budismo.nikkyojers.ui.feed.AddPostActivity">
 
     <include layout="@layout/content_add_post" />

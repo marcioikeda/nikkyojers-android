@@ -15,7 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 import br.com.budismo.nikkyojers.R;
@@ -24,13 +26,12 @@ import br.com.budismo.nikkyojers.data.Event;
 /**
  * Created by marcioikeda on 04/02/18.
  */
-
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventViewHolder>{
 
-    private List<Event> mEvents = new ArrayList<>();
-    private SimpleDateFormat sdfDate = new SimpleDateFormat("dd\nEEE", Locale.getDefault());
-    private SimpleDateFormat sdfTime = new SimpleDateFormat("h:mma", Locale.getDefault());
-    //private SimpleDateFormat sdfTimeDate = new SimpleDateFormat("h:mma (dd)", Locale.US);
+    private List<Event> mEvents = new LinkedList<>();
+    private final SimpleDateFormat sdfDate = new SimpleDateFormat("dd\nEEE", Locale.getDefault());
+    private final SimpleDateFormat sdfTime = new SimpleDateFormat("h:mma", Locale.getDefault());
+    private final SimpleDateFormat sdfTimeDate = new SimpleDateFormat("dd MMM", Locale.getDefault());
     private CalendarEventListener mListener;
 
     public interface CalendarEventListener {
@@ -42,12 +43,21 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
     }
 
     public void addNewEvent(Event event) {
-        mEvents.add(event);
-        notifyItemInserted(mEvents.size() - 1);
+        int index = 0;
+
+        for (Event e: mEvents) {
+            if (e.startDate > event.startDate) {
+                break;
+            }
+            index++;
+        }
+
+        mEvents.add(index, event);
+        notifyDataSetChanged();
     }
 
     public void clear() {
-        mEvents = new ArrayList<>();
+        mEvents.clear();
         notifyDataSetChanged();
     }
 
@@ -71,24 +81,40 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
         Calendar endDateCal = Calendar.getInstance();
         endDateCal.setTime(endDate);
 
+        //Hide date if the event above already shows.
+        Event beforeEvent;
+        if (position > 0) {
+            beforeEvent = mEvents.get(position - 1);
+            Date dateBefore = new Date(beforeEvent.startDate);
+            Calendar dateBeforeCal = Calendar.getInstance();
+            dateBeforeCal.setTime(dateBefore);
+            if (dateBeforeCal.get(Calendar.DAY_OF_MONTH) == startDateCal.get(Calendar.DAY_OF_MONTH)) {
+                holder.tvEventStartDate.setVisibility(View.INVISIBLE);
+            } else {
+                holder.tvEventStartDate.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.tvEventStartDate.setVisibility(View.VISIBLE);
+        }
+
+
         holder.tvEventStartDate.setText(sdfDate.format(startDate));
-        //holder.tvEventEndDate.setText(sdfDate.format(endDate));
+
+        SimpleDateFormat sdfTimeToUse = sdfTime;
+
+        holder.tvEventStartTime.setVisibility(View.VISIBLE);
+        holder.tvEventEndTime.setVisibility(View.VISIBLE);
 
         if (startDateCal.get(Calendar.DAY_OF_MONTH) != endDateCal.get(Calendar.DAY_OF_MONTH)) {
-            //holder.tvEventEndDate.setVisibility(View.GONE);
+            sdfTimeToUse = sdfTimeDate;
+        } else if (event.allDay) {
             holder.tvEventStartTime.setVisibility(View.GONE);
             holder.tvEventEndTime.setVisibility(View.GONE);
         }
 
-        if (event.allDay) {
-            holder.tvEventStartTime.setVisibility(View.GONE);
-            holder.tvEventEndTime.setVisibility(View.GONE);
-        } else {
-            //holder.tvEventTime.setText(String.format(formatTimeToUse, sdfTimeToUse.format(new Date(event.startDate)), sdfTimeToUse.format(new Date(event.endDate)))) ;
-            holder.tvEventStartTime.setText(sdfTime.format(new Date(event.startDate)));
-            holder.tvEventEndTime.setText(sdfTime.format(new Date(event.endDate)));
+        holder.tvEventStartTime.setText(sdfTimeToUse.format(new Date(event.startDate)) + " - ");
+        holder.tvEventEndTime.setText(sdfTimeToUse.format(new Date(event.endDate)));
 
-        }
         holder.cardEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

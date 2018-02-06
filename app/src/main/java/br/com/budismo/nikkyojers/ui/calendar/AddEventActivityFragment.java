@@ -3,7 +3,6 @@ package br.com.budismo.nikkyojers.ui.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,6 +34,7 @@ import java.util.Locale;
 import br.com.budismo.nikkyojers.R;
 import br.com.budismo.nikkyojers.data.Event;
 import br.com.budismo.nikkyojers.data.FirebaseDatabaseHelper;
+import br.com.budismo.nikkyojers.util.Util;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,8 +52,8 @@ public class AddEventActivityFragment extends Fragment {
     private EditText mEditLocationView;
     private EditText mEditDescriptionView;
 
-    final SimpleDateFormat sdfDate = new SimpleDateFormat("E, MMM d, yyyy", Locale.getDefault());
-    final SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private final SimpleDateFormat sdfDate = new SimpleDateFormat("E, MMM d, yyyy", Locale.getDefault());
+    private final SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
 
@@ -203,9 +203,13 @@ public class AddEventActivityFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_publish) {
-            Event event = getNewEventFromView();
-            if (event != null && validateInput(event)) {
-                createEvent(event);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Event event = getNewEventFromView();
+                if (event != null && validateInput(event)) {
+                    createEvent(event);
+                }
+            } else {
+                Util.startFirebaseUIActivity(getActivity());
             }
         }
         return super.onOptionsItemSelected(item);
@@ -240,7 +244,7 @@ public class AddEventActivityFragment extends Fragment {
             newEvent.endDate = endDate.getTimeInMillis();
 
         } catch (ParseException e) {
-            Snackbar.make(mStartDateView, getString(R.string.addevent_date_error), Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.addevent_date_error), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             return null;
         }
@@ -250,10 +254,10 @@ public class AddEventActivityFragment extends Fragment {
 
     private boolean validateInput(Event event) {
         if (TextUtils.isEmpty(event.title)) {
-            Snackbar.make(mEditTitleView, getString(R.string.addevent_title_error), Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.addevent_title_error), Toast.LENGTH_SHORT).show();
             return false;
-        } else if (event.startDate >= event.endDate){
-            Snackbar.make(mStartDateView, getString(R.string.addevent_date_notbefore), Snackbar.LENGTH_SHORT).show();
+        } else if (event.startDate > event.endDate){
+            Toast.makeText(getActivity(), getString(R.string.addevent_date_notbefore), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -266,7 +270,7 @@ public class AddEventActivityFragment extends Fragment {
                 if (databaseError != null) {
                     Toast.makeText(getContext(), databaseError.getCode() + ":" + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getContext(), "Posted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getContext().getString(R.string.posted), Toast.LENGTH_LONG).show();
                 }
                 getActivity().finish();
             }
